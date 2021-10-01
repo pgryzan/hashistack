@@ -39,7 +39,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     location                        = azurerm_resource_group.cluster.location
     resource_group_name             = azurerm_resource_group.cluster.name
     dns_prefix                      = "${local.prefix}-k8s"
-    automatic_channel_upgrade       = "none"
+    automatic_channel_upgrade       = "stable"
 
     default_node_pool {
         name                        = "default"
