@@ -1,0 +1,54 @@
+# Vault Helm Chart Value Overrides
+injector:
+  image:
+    repository: "hashicorp/vault-k8s"
+    tag: "latest"
+
+server:
+  dev:
+    enabled: true
+  image:
+    repository: "hashicorp/vault-enterprise"
+    tag: "${vault_version}_ent"
+  enterpriseLicense:
+    secretName: vault-license
+  ha:
+    enabled: true
+    replicas: 3
+    raft:
+      enabled: true
+      setNodeId: true
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = 1
+          address = "0.0.0.0:8200"
+          cluster_address = "0.0.0.0:8201"
+        }
+
+        storage "raft" {
+          path = "/vault/data"
+
+          retry_join {
+            leader_api_addr = "http://vault-0.vault-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-1.vault-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-2.vault-internal:8200"
+          }
+        }
+
+        service_registration "kubernetes" {}
+
+ui:
+  enabled: true
+  serviceType: "LoadBalancer"
+  serviceNodePort: null
+  externalPort: 8200
+
+# kubectl get pods --selector='app.kubernetes.io/name=vault' --namespace='vault'
+# kubectl exec vault-0 --namespace vault -- vault operator init -key-shares=1 -key-threshold=1
+# kubectl exec vault-0 --namespace vault -- vault operator unseal swIE4ZFOFIbdTQJJBSDdBksBposYebqhfyp83n31aQc=

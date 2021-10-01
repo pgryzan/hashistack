@@ -1,0 +1,1 @@
+# hashistack vault module

@@ -1,0 +1,120 @@
+global:
+  enabled: true
+  name: 'consul'
+  datacenter: ${datacenter}
+  image: 'hashicorp/consul-enterprise:${consul_version}-ent'
+  enableConsulNamespaces: true
+  metrics:
+    enabled: true
+    agentMetricsRetentionTime: 1m
+    enableAgentMetrics: true
+    enableGatewayMetrics: true
+  federation:
+    enabled: true
+%{if primary ~}
+    createFederationSecret: true
+%{endif ~}
+  acls:
+    manageSystemACLs: true
+%{if primary ~}
+    createReplicationToken: true
+%{else ~}
+    replicationToken:
+      secretName: consul-federation
+      secretKey: replicationToken
+%{endif ~}
+  gossipEncryption:
+%{if primary ~}
+    secretName: consul-gossip-encryption-key
+    secretKey: key
+%{else ~}
+    secretName: consul-federation
+    secretKey: gossipEncryptionKey
+%{endif ~}
+  tls:
+    enabled: true
+    httpsOnly: false
+%{if !primary ~}
+    caCert:
+      secretName: 'consul-federation'
+      secretKey: 'caCert'
+    caKey:
+      secretName: 'consul-federation'
+      secretKey: 'caKey'
+%{endif ~}
+
+server:
+  enabled: true
+  replicas: ${replicas}
+  bootstrapExpect: ${replicas}
+  enterpriseLicense:
+    secretName: 'consul-license'
+    secretKey: 'key'
+  extraConfig: |
+    {
+      "ui_config": {
+        "dashboard_url_templates": {
+          "service": "https://prometheus-server.default.svc.cluster.local:9090/d/lDlaj-NGz/service-overview?orgId=1&var-service={{ "{{" }}Service.Name}}&var-namespace={{ "{{" }}Service.Namespace}}&var-dc={{ "{{" }}Datacenter}}"
+        }
+      }
+    }
+  disruptionBudget:
+    enabled: true
+    maxUnavailable: 0
+%{if !primary ~}
+  extraVolumes:
+    - type: secret
+      name: consul-federation
+      items:
+        - key: serverConfigJSON
+          path: config.json
+      load: true
+%{endif ~}
+
+ui:
+  enabled: true
+  service:
+    enabled: true
+    type: LoadBalancer
+  metrics:
+    enabled: true # by default, this inherits from the value global.metrics.enabled
+    provider: "prometheus"
+    baseURL: http://prometheus-server
+
+meshGateway:
+  enabled: true
+  enableHealthChecks: true
+  replicas: 1
+  service:
+    enabled: true
+
+connectInject:
+  enabled: true
+  transparentProxy:
+    defaultEnabled: true
+  consulNamespaces:
+    mirroringK8S: true
+
+client:
+  enabled: true
+  grpc: true
+
+controller:
+  enabled: true
+
+ingressGateways:
+  enabled: true
+  defaults:
+    replicas: 1
+    service:
+      type: LoadBalancer
+      ports:
+        - port: 443
+          nodePort: null
+        - port: 8080
+          nodePort: null
+  gateways:
+    - name: 'ingress-gateway'
+
+prometheus:
+  enabled: true
