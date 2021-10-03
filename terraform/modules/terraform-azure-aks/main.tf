@@ -29,6 +29,10 @@ locals {
 resource "azurerm_resource_group" "cluster" {
     name                            = "${local.prefix}"
     location                        = var.cluster.region
+    tags                            = {
+        DoNotDelete                 = true
+        owner                       = "pgryzan@hashicorp.com"
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
