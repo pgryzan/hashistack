@@ -92,7 +92,7 @@ provider "consul" {
     address                     = "https://${module.consul.ui}:443"
     scheme                      = "https"
     insecure_https              = true
-    token                       = module.consul.acl_token
+    token                       = var.cluster.primary ? module.consul.acl_token : var.acl_token
 }
 
 module "consul_config" {

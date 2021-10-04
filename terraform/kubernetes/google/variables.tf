@@ -48,6 +48,10 @@ variable "deploy_hashicups" {
     default = false
 }
 
+variable "acl_token" {
+    default = "9de9f63a-4e65-c243-f6f7-4d7e582fa587"
+}
+
 variable "frontend_version" {
     description     = "Frontend Version"
     default         = ""
