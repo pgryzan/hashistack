@@ -41,34 +41,34 @@ variable "vault" {
     description     = "Vault Information"
 }
 
-// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// //  HashiCups
-// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// variable "deploy_hashicups" {
-//     default = false
-// }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  HashiCups
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+variable "deploy_hashicups" {
+    default = false
+}
 
-// variable "frontend_version" {
-//     description     = "Frontend Version"
-//     default         = ""
-// }
+variable "frontend_version" {
+    description     = "Frontend Version"
+    default         = ""
+}
 
-// variable "create_traffic" {
-//     description     = "Create Frontend Traffic for Network Metrics"
-//     default         = false
-// }
+variable "create_traffic" {
+    description     = "Create Frontend Traffic for Network Metrics"
+    default         = false
+}
 
-// variable "create_intentions" {
-//     description     = "Create Intentions for Application"
-//     default         = true
-// }
+variable "create_intentions" {
+    description     = "Create Intentions for Application"
+    default         = true
+}
 
-// variable "create_routing" {
-//     description     = "Create Routing for Application"
-//     default         = false
-// }
+variable "create_routing" {
+    description     = "Create Routing for Application"
+    default         = false
+}
 
-// variable "failover_datacenters" {
-//     description     = "List of Datacenters to Search"
-//     default         = ["app-east", "app-west"]
-// }
+variable "failover_datacenters" {
+    description     = "List of Datacenters to Search"
+    default         = ["app-east", "app-west"]
+}

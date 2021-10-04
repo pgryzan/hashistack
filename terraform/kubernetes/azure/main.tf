@@ -134,15 +134,15 @@ module "boundary_config" {
     depends_on                  = [module.boundary]
 }
 
-// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// //  HashiCups
-// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// module "hashicups" {
-//     count                       = var.deploy_hashicups ? 1 : 0
-//     source                      = "../../modules/terraform-kubernetes-hashicups"
-//     frontend_version            = var.frontend_version
-//     create_traffic              = var.create_traffic
-//     create_intentions           = var.create_intentions
-//     create_routing              = var.create_routing
-//     failover_datacenters        = var.failover_datacenters
-// }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  HashiCups
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module "hashicups" {
+    count                       = var.deploy_hashicups ? 1 : 0
+    source                      = "app.terraform.io/pgryzan/hashicups/kubernetes"
+    frontend_version            = var.frontend_version
+    create_traffic              = var.create_traffic
+    create_intentions           = var.create_intentions
+    create_routing              = var.create_routing
+    failover_datacenters        = var.failover_datacenters
+}
