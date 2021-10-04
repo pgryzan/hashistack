@@ -44,6 +44,10 @@ variable "vault" {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  HashiCups
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+variable "deploy_hashicups" {
+    default = false
+}
+
 variable "frontend_version" {
     description     = "Frontend Version"
     default         = ""
@@ -66,5 +70,5 @@ variable "create_routing" {
 
 variable "failover_datacenters" {
     description     = "List of Datacenters to Search"
-    default         = ["east", "central", "west"]
+    default         = ["app-east", "app-west"]
 }
